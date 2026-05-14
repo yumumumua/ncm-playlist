@@ -6,9 +6,7 @@
 
 | 功能 | 说明 |
 |------|------|
-| 获取歌单详情 | 输入歌单 ID 或链接，获取完整歌曲列表 |
-| 不可播放检测 | 批量检测歌曲是否有可播放 URL（灰色歌曲） |
-| 歌单清洗 | 一键过滤不可播放歌曲，交互确认后批量删除 |
+| 获取歌单歌曲列表 | 输入歌单 ID 或链接，获取完整歌曲列表（含 privilege 字段） |
 | 新建歌单 | 创建公开或隐私歌单 |
 | 删除歌单 | 删除指定歌单 |
 | 添加歌曲 | 向歌单批量添加歌曲（自动分批，每批 50 首） |
@@ -72,7 +70,7 @@ openclaw skills install ncm-playlist
 
 安装后，当你在聊天中提到歌单管理相关需求时，agent 会自动激活此 skill。例如：
 
-- "帮我整理一下这个歌单，把不能播放的歌删掉"
+- "帮我获取这个歌单的所有歌曲"
 - "新建一个叫 XXX 的歌单"
 - "往歌单里加这几首歌"
 
@@ -82,22 +80,18 @@ openclaw skills install ncm-playlist
 cd ncm-playlist
 ```
 
-#### 1. 获取歌单并过滤不可播放歌曲
+#### 1. 获取歌单歌曲列表
 
 ```bash
-python3 check_playlist.py \
+python3 fetch_playlist.py \
   --cookie "YOUR_COOKIE" \
   --playlist "歌单链接或ID"
 ```
 
-输出到 `output/` 目录：
-- `playable.json` — 可播放歌曲列表
-- `unplayable.json` — 不可播放歌曲列表
-- `summary.txt` — 摘要信息
+输出到 `output/songs.json`，每首歌包含 id、name、artists、album、duration_ms、publish_time 和 privilege 字段。
 
 可选参数：
 - `--output DIR` — 指定输出目录
-- `--remove` — 展示不可播放列表后交互确认是否从歌单删除
 
 #### 2. 创建歌单
 
@@ -127,12 +121,25 @@ python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --add 111,
 python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --remove-tracks 111,222,333
 ```
 
-## 不可播放的定义
+## privilege 字段说明
 
-歌单内原版本无法播放即属不可播放：
-- 无版权
-- 有替代版本（其他版本可播放但原版不行）
-- 无法获取播放链接
+返回的歌曲列表中包含 privilege 字段，可用于判断歌曲是否可播放：
+
+| 字段 | 含义 |
+|------|------|
+| `pl` | 播放等级，`> 0` 可播放，`== 0` 不可播放 |
+| `cp` | 版权状态，`1` 有版权，`0` 无版权 |
+| `st` | 状态，`0` 正常，负值异常（如 `-200` 有替代版本） |
+
+## Agent 进度追踪
+
+拉取大歌单时，脚本会在输出目录写入 `.progress.json` 文件：
+
+```json
+{"stage": "fetching", "current": 1500, "total": 5000}
+```
+
+建议用后台模式运行脚本，然后轮询 `.progress.json` 查看进度。脚本正常完成后会删除此文件。
 
 ## 文件结构
 
@@ -140,12 +147,11 @@ python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --remove-t
 ncm-playlist/
 ├── SKILL.md                     # Agent Skill 元数据与指令
 ├── README.md                    # 本文件
-├── check_playlist.py            # 歌单检查主脚本
+├── fetch_playlist.py            # 获取歌单歌曲列表入口
 ├── manage_playlist.py           # 歌单管理入口（创建/删除/添加/移除）
 └── netease_music/               # 核心模块包
     ├── __init__.py              # 包初始化
     ├── api.py                   # API 客户端（直连 music.163.com）
-    ├── checker.py               # 可播放性判断逻辑
     └── playlist.py              # 歌单操作封装
 ```
 
