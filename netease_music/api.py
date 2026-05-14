@@ -87,58 +87,59 @@ class NeteaseMusicAPI:
     def fetch_playlist_tracks(self, playlist_id: int) -> tuple[list, list]:
         """获取歌单全部歌曲，返回 (tracks, privileges)。
 
-        第一页同步拉取获取总数，剩余页用 ThreadPoolExecutor(max_workers=3) 并行拉取。
+        第一步：/api/v6/playlist/detail (n=0) 获取完整 trackIds 列表。
+        第二步：分批调用 /api/v3/song/detail（每批 250 首）获取详情 + privilege。
         """
-        page_size = 500
+        detail_batch_size = 250
 
-        # 第一页 — 同步，获取总数
+        # 获取完整 trackIds
         data = self.get("/api/v6/playlist/detail", {
             "id": playlist_id,
-            "n": page_size,
-            "offset": 0,
+            "n": 0,
         })
         playlist_data = data.get("playlist", {})
-        tracks = playlist_data.get("tracks", [])
-        privileges = data.get("privileges", [])
-        track_count = playlist_data.get("trackCount", len(tracks))
+        track_ids_obj = playlist_data.get("trackIds", [])
+        track_count = len(track_ids_obj)
 
-        if not tracks or len(tracks) >= track_count:
+        if track_count == 0:
+            # fallback: 尝试用 v6 自带的 tracks
+            tracks = playlist_data.get("tracks", [])
+            privileges = data.get("privileges", [])
             return tracks, privileges
 
-        # 多线程拉取剩余页
-        offsets = list(range(page_size, track_count, page_size))
+        track_ids = [t["id"] for t in track_ids_obj]
         total = track_count
-        fetched = len(tracks)
-        self._write_progress("fetching", fetched, total)
+        fetched = 0
+        self._write_progress("fetching", 0, total)
 
+        # 分批获取歌曲详情
         remaining: dict[int, tuple[list, list]] = {}
         lock = threading.Lock()
 
-        def fetch_page(offset: int):
+        def fetch_detail_batch(batch_idx: int):
             nonlocal fetched
-            page_data = self.get("/api/v6/playlist/detail", {
-                "id": playlist_id,
-                "n": page_size,
-                "offset": offset,
-            })
-            p = page_data.get("playlist", {})
-            t = p.get("tracks", [])
-            priv = page_data.get("privileges", [])
+            start = batch_idx * detail_batch_size
+            batch = track_ids[start:start + detail_batch_size]
+            c_param = json.dumps([{"id": tid} for tid in batch])
+            r = self.get("/api/v3/song/detail", {"c": c_param})
+            t = r.get("songs", [])
+            priv = r.get("privileges", [])
             with lock:
-                remaining[offset] = (t, priv)
+                remaining[batch_idx] = (t, priv)
                 fetched += len(t)
                 self._write_progress("fetching", fetched, total)
 
+        num_batches = (track_count + detail_batch_size - 1) // detail_batch_size
         with ThreadPoolExecutor(max_workers=3) as executor:
-            futures = [executor.submit(fetch_page, off) for off in offsets]
+            futures = [executor.submit(fetch_detail_batch, i) for i in range(num_batches)]
             for future in futures:
                 future.result()
 
-        # 按 offset 排序合并
-        all_tracks = list(tracks)
-        all_privileges = list(privileges)
-        for offset in sorted(remaining):
-            t, p = remaining[offset]
+        # 按批次顺序合并
+        all_tracks = []
+        all_privileges = []
+        for idx in range(num_batches):
+            t, p = remaining.get(idx, ([], []))
             all_tracks.extend(t)
             all_privileges.extend(p)
 
