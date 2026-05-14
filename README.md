@@ -85,7 +85,7 @@ cd ncm-playlist
 #### 1. 获取歌单并过滤不可播放歌曲
 
 ```bash
-python3 scripts/check_playlist.py \
+python3 check_playlist.py \
   --cookie "YOUR_COOKIE" \
   --playlist "歌单链接或ID"
 ```
@@ -103,28 +103,28 @@ python3 scripts/check_playlist.py \
 
 ```bash
 # 创建隐私歌单（默认）
-python3 scripts/manage_playlist.py --cookie "YOUR_COOKIE" --create "我的歌单"
+python3 manage_playlist.py --cookie "YOUR_COOKIE" --create "我的歌单"
 
 # 创建公开歌单
-python3 scripts/manage_playlist.py --cookie "YOUR_COOKIE" --create "我的歌单" --public
+python3 manage_playlist.py --cookie "YOUR_COOKIE" --create "我的歌单" --public
 ```
 
 #### 3. 删除歌单
 
 ```bash
-python3 scripts/manage_playlist.py --cookie "YOUR_COOKIE" --delete 歌单ID
+python3 manage_playlist.py --cookie "YOUR_COOKIE" --delete 歌单ID
 ```
 
 #### 4. 向歌单添加歌曲
 
 ```bash
-python3 scripts/manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --add 111,222,333
+python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --add 111,222,333
 ```
 
 #### 5. 从歌单移除歌曲
 
 ```bash
-python3 scripts/manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --remove-tracks 111,222,333
+python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --remove-tracks 111,222,333
 ```
 
 ## 不可播放的定义
@@ -138,15 +138,15 @@ python3 scripts/manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --
 
 ```
 ncm-playlist/
-├── SKILL.md                 # Agent Skill 元数据与指令
-├── README.md                # 本文件
-└── scripts/
-    ├── api.py               # API 客户端（直连 music.163.com）
-    ├── checker.py           # 可播放性判断逻辑
-    ├── check_playlist.py    # 歌单检查主脚本
-    ├── manage_playlist.py   # 歌单管理入口（创建/删除/添加/移除）
-    ├── playlist.py          # 歌单操作封装
-    └── __init__.py
+├── SKILL.md                     # Agent Skill 元数据与指令
+├── README.md                    # 本文件
+├── check_playlist.py            # 歌单检查主脚本
+├── manage_playlist.py           # 歌单管理入口（创建/删除/添加/移除）
+└── netease_music/               # 核心模块包
+    ├── __init__.py              # 包初始化
+    ├── api.py                   # API 客户端（直连 music.163.com）
+    ├── checker.py               # 可播放性判断逻辑
+    └── playlist.py              # 歌单操作封装
 ```
 
 ## 注意事项

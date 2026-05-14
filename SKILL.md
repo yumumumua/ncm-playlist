@@ -26,10 +26,11 @@ compatibility: Requires Python 3.10+
 
 ## 脚本位置
 
-所有脚本在 `scripts/` 目录下。运行时先 cd 到 skill 目录：
+入口脚本在项目根目录，核心模块在 `netease_music/` 包内。运行时先 cd 到项目目录：
 
 ```bash
-cd <skill目录> && python3 scripts/<脚本>.py <参数>
+cd <项目目录> && python3 check_playlist.py <参数>
+cd <项目目录> && python3 manage_playlist.py <参数>
 ```
 
 ## 功能与用法
@@ -37,7 +38,7 @@ cd <skill目录> && python3 scripts/<脚本>.py <参数>
 ### 1. 获取歌单并过滤不可播放歌曲
 
 ```bash
-python3 scripts/check_playlist.py \
+python3 check_playlist.py \
   --cookie "COOKIE" \
   --playlist "歌单链接或ID"
 ```
@@ -52,16 +53,16 @@ python3 scripts/check_playlist.py \
 
 ```bash
 # 创建歌单（默认隐私，加 --public 改为公开）
-python3 scripts/manage_playlist.py --cookie "COOKIE" --create "歌单名"
+python3 manage_playlist.py --cookie "COOKIE" --create "歌单名"
 
 # 删除歌单
-python3 scripts/manage_playlist.py --cookie "COOKIE" --delete 歌单ID
+python3 manage_playlist.py --cookie "COOKIE" --delete 歌单ID
 
 # 添加歌曲
-python3 scripts/manage_playlist.py --cookie "COOKIE" --playlist 歌单ID --add 111,222,333
+python3 manage_playlist.py --cookie "COOKIE" --playlist 歌单ID --add 111,222,333
 
 # 移除歌曲
-python3 scripts/manage_playlist.py --cookie "COOKIE" --playlist 歌单ID --remove-tracks 111,222,333
+python3 manage_playlist.py --cookie "COOKIE" --playlist 歌单ID --remove-tracks 111,222,333
 ```
 
 ## 不可播放的定义
@@ -74,13 +75,13 @@ python3 scripts/manage_playlist.py --cookie "COOKIE" --playlist 歌单ID --remov
 ## 文件结构
 
 ```
-scripts/
-├── check_playlist.py   # 主脚本：获取歌单 + 过滤 + 可选删除
-├── manage_playlist.py  # 歌单管理入口
-├── api.py              # API 客户端（直连 music.163.com）
-├── checker.py          # 可播放性判断逻辑
-├── playlist.py         # 歌单操作封装
-└── __init__.py
+├── check_playlist.py       # 主脚本：获取歌单 + 过滤 + 可选删除
+├── manage_playlist.py      # 歌单管理入口
+└── netease_music/           # 核心模块包
+    ├── __init__.py         # 包初始化
+    ├── api.py              # API 客户端（直连 music.163.com）
+    ├── checker.py          # 可播放性判断逻辑
+    └── playlist.py         # 歌单操作封装
 ```
 
 ## 执行注意事项
