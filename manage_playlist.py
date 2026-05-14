@@ -28,7 +28,6 @@ from netease_music.api import NeteaseMusicAPI
 def main():
     parser = argparse.ArgumentParser(description="网易云音乐歌单管理工具")
     parser.add_argument("--cookie", required=True, help="网易云音乐 Cookie")
-    parser.add_argument("--output", default="output", help="进度文件目录 (默认: output)")
 
     # 操作（互斥）
     ops = parser.add_mutually_exclusive_group(required=True)
@@ -49,9 +48,7 @@ def main():
     if args.remove_tracks and not args.playlist:
         parser.error("移除歌曲需要 --playlist 参数")
 
-    os.makedirs(args.output, exist_ok=True)
-    progress_file = os.path.join(args.output, ".progress.json")
-    api = NeteaseMusicAPI(args.cookie, progress_file=progress_file)
+    api = NeteaseMusicAPI(args.cookie)
 
     if args.create:
         privacy = 0 if args.public else 10
@@ -72,12 +69,20 @@ def main():
 
     elif args.add:
         track_ids = [int(x.strip()) for x in args.add.split(",") if x.strip()]
+        output_dir = "output"
+        os.makedirs(output_dir, exist_ok=True)
+        progress_file = os.path.join(output_dir, ".progress.json")
+        api.progress_file = progress_file
         print(f"向歌单 {args.playlist} 添加 {len(track_ids)} 首歌曲...")
         ok, fail = api.add_tracks(args.playlist, track_ids)
         print(f"完成: 成功 {ok}, 失败 {fail}")
 
     elif args.remove_tracks:
         track_ids = [int(x.strip()) for x in args.remove_tracks.split(",") if x.strip()]
+        output_dir = "output"
+        os.makedirs(output_dir, exist_ok=True)
+        progress_file = os.path.join(output_dir, ".progress.json")
+        api.progress_file = progress_file
         print(f"从歌单 {args.playlist} 移除 {len(track_ids)} 首歌曲...")
         ok, fail = api.remove_tracks(args.playlist, track_ids)
         print(f"完成: 成功 {ok}, 失败 {fail}")

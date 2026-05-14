@@ -151,8 +151,7 @@ ncm-playlist/
 ├── manage_playlist.py           # 歌单管理入口（创建/删除/添加/移除）
 └── netease_music/               # 核心模块包
     ├── __init__.py              # 包初始化
-    ├── api.py                   # API 客户端（直连 music.163.com）
-    └── playlist.py              # 歌单操作封装
+    └── api.py                   # API 客户端（直连 music.163.com）
 ```
 
 ## 注意事项
