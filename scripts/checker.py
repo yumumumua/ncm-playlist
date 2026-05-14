@@ -11,6 +11,7 @@ def _format_song(song: dict) -> dict:
         "artists": [ar["name"] for ar in song.get("ar", [])],
         "album": song.get("al", {}).get("name", ""),
         "duration_ms": song.get("dt", 0),
+        "publish_time": song.get("publishTime", 0),
     }
 
 
