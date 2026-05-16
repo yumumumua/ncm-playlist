@@ -3,24 +3,30 @@
 
 用法：
   # 创建歌单
-  python manage_playlist.py --cookie "COOKIE" --create "歌单名称"
+  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --create "歌单名称"
 
   # 删除歌单
-  python manage_playlist.py --cookie "COOKIE" --delete 123456
+  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --delete 123456
 
   # 向歌单添加歌曲
-  python manage_playlist.py --cookie "COOKIE" --playlist 123456 --add 111,222,333
+  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --playlist 123456 --add 111,222,333
 
   # 从歌单移除歌曲
-  python manage_playlist.py --cookie "COOKIE" --playlist 123456 --remove-tracks 111,222,333
+  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --playlist 123456 --remove-tracks 111,222,333
 
   # 设置歌单为公开
-  python manage_playlist.py --cookie "COOKIE" --create "公开歌单" --public
+  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --create "公开歌单" --public
 """
 
 import argparse
 import os
 import sys
+from pathlib import Path
+
+# Add parent directories to path for imports
+script_dir = Path(__file__).parent
+skill_root = script_dir.parent
+sys.path.insert(0, str(skill_root))
 
 from netease_music.api import NeteaseMusicAPI
 
