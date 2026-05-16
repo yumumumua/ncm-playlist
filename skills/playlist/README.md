@@ -1,14 +1,12 @@
-# Playlist Skill — 网易云歌单管理
+# Playlist Skill — 网易云歌单歌曲管理
 
-本技能提供网易云音乐歌单管理能力，包括获取歌单歌曲、创建/删除歌单、添加/移除歌曲等操作。
+本技能提供网易云音乐歌单歌曲管理能力，包括获取歌单歌曲、添加/移除歌曲等操作。
 
 ## 功能
 
 | 功能 | 说明 |
 |------|------|
 | 获取歌单歌曲列表 | 输入歌单 ID 或链接，获取完整歌曲列表（含 privilege 字段） |
-| 新建歌单 | 创建公开或隐私歌单 |
-| 删除歌单 | 删除指定歌单 |
 | 添加歌曲 | 向歌单批量添加歌曲（自动分批，每批 50 首） |
 | 移除歌曲 | 从歌单批量移除歌曲（自动分批，每批 50 首） |
 
@@ -19,11 +17,6 @@
 python3 skills/playlist/scripts/fetch_playlist.py \
   --cookie "COOKIE" \
   --playlist "歌单ID或链接"
-
-# 创建歌单
-python3 skills/playlist/scripts/manage_playlist.py \
-  --cookie "COOKIE" \
-  --create "我的歌单"
 
 # 添加歌曲
 python3 skills/playlist/scripts/manage_playlist.py \
