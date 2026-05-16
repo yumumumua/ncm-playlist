@@ -1,9 +1,9 @@
 ---
 name: ncm-playlist
-description: 网易云音乐歌单管理工具。获取歌单歌曲列表，管理歌单（创建/删除/添加/移除歌曲）。
+description: 网易云音乐歌单管理工具。获取歌单歌曲列表，添加/移除歌单内歌曲。
 trigger:
   - 网易云音乐歌单整理、歌单管理
-  - 创建/删除歌单、添加/移除歌曲
+  - 添加/移除歌单歌曲
   - 获取歌单歌曲列表、批量操作歌单
 license: MIT
 requires: Python 3.10+
@@ -58,46 +58,7 @@ cd <项目目录> && python3 skills/playlist/scripts/fetch_playlist.py \
 可选参数：
 - `--output DIR` — 指定输出目录（默认: output）
 
-### 2. 创建歌单
-
-**输入：**
-- `name` (str) — 歌单名称
-- `public` (bool, 可选) — 是否公开，默认 false（隐私）
-
-**输出：**
-- 成功：打印 "创建歌单「名称」成功, id=<ID>"
-- 失败：打印 "创建歌单「名称」失败"
-
-**调用方式：**
-```bash
-cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
-  --cookie "COOKIE" \
-  --create "<歌单名称>"
-
-# 创建公开歌单
-cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
-  --cookie "COOKIE" \
-  --create "<歌单名称>" \
-  --public
-```
-
-### 3. 删除歌单
-
-**输入：**
-- `playlist_id` (int) — 歌单 ID
-
-**输出：**
-- 成功：打印 "歌单 <ID> 删除成功"
-- 失败：打印 "歌单 <ID> 删除失败"
-
-**调用方式：**
-```bash
-cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
-  --cookie "COOKIE" \
-  --delete <playlist_id>
-```
-
-### 4. 向歌单添加歌曲
+### 2. 向歌单添加歌曲
 
 **输入：**
 - `playlist_id` (int) — 目标歌单 ID
@@ -114,7 +75,7 @@ cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
   --add <id1,id2,id3>
 ```
 
-### 5. 从歌单移除歌曲
+### 3. 从歌单移除歌曲
 
 **输入：**
 - `playlist_id` (int) — 目标歌单 ID
@@ -153,4 +114,4 @@ cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
 
 - Cookie 含敏感信息，不要硬编码到脚本中，通过命令行参数传入
 - 批量操作自动分批（每批 50 首），含频率限制等待
-- 歌单操作（增删）不可逆，操作前确认用户意图
+- 歌单操作（增删歌曲）不可逆，操作前确认用户意图
