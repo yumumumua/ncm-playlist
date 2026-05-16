@@ -16,7 +16,7 @@ class NeteaseMusicAPI:
 
     BASE_URL = "https://music.163.com"
 
-    def __init__(self, cookie: str, progress_file: str = None):
+    def __init__(self, cookie: str, progress_file: str | None = None):
         self.cookie = cookie
         self.progress_file = progress_file
         self._progress_lock = threading.Lock()
@@ -38,7 +38,7 @@ class NeteaseMusicAPI:
 
     # ── HTTP helpers ──────────────────────────────────────────
 
-    def get(self, path: str, params: Dict = None) -> Dict:
+    def get(self, path: str, params: Dict | None = None) -> Dict:
         url = f"{self.BASE_URL}{path}"
         if params:
             url += "?" + urllib.parse.urlencode(params)
