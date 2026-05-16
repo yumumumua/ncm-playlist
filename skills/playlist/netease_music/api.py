@@ -8,7 +8,7 @@ import urllib.request
 import urllib.parse
 import ssl
 from concurrent.futures import ThreadPoolExecutor
-from typing import Optional, List, Tuple, Dict
+from typing import List, Tuple, Dict
 
 
 class NeteaseMusicAPI:
@@ -16,7 +16,7 @@ class NeteaseMusicAPI:
 
     BASE_URL = "https://music.163.com"
 
-    def __init__(self, cookie: str, progress_file: Optional[str] = None):
+    def __init__(self, cookie: str, progress_file: str = None):
         self.cookie = cookie
         self.progress_file = progress_file
         self._progress_lock = threading.Lock()
@@ -38,7 +38,7 @@ class NeteaseMusicAPI:
 
     # ── HTTP helpers ──────────────────────────────────────────
 
-    def get(self, path: str, params: Optional[Dict] = None) -> Dict:
+    def get(self, path: str, params: Dict = None) -> Dict:
         url = f"{self.BASE_URL}{path}"
         if params:
             url += "?" + urllib.parse.urlencode(params)
@@ -149,23 +149,6 @@ class NeteaseMusicAPI:
 
     # ── 歌单操作 ──────────────────────────────────────────────
 
-    def create_playlist(self, name: str, privacy: int = 10) -> Optional[int]:
-        """创建歌单，返回歌单 ID 或 None。privacy: 10=隐私, 0=公开。"""
-        result = self.post("/api/user/playlist/create", {
-            "name": name,
-            "privacy": str(privacy),
-        })
-        if result.get("code") == 200:
-            return result.get("id") or result.get("playlist", {}).get("id")
-        return None
-
-    def delete_playlist(self, playlist_id: int) -> bool:
-        """删除歌单。"""
-        result = self.post("/api/user/playlist/delete", {
-            "pid": str(playlist_id),
-        })
-        return result.get("code") == 200
-
     def _manipulate_tracks(self, op: str, playlist_id: int, track_ids: List[int]) -> Tuple[int, int]:
         """歌单歌曲增删通用方法。返回 (成功数, 失败数)。"""
         batch_size = 50
@@ -188,7 +171,7 @@ class NeteaseMusicAPI:
                     "tracks": tracks_str,
                     "imme": "true",
                 })
-                if result.get("code") in (200, 512):
+                if result.get("code") in (200, 512, 502):
                     ok += len(batch)
                 else:
                     result2 = self.post("/api/playlist/manipulate/tracks", {
@@ -197,7 +180,7 @@ class NeteaseMusicAPI:
                         "trackIds": json.dumps(batch),
                         "imme": "true",
                     })
-                    if result2.get("code") in (200, 512):
+                    if result2.get("code") in (200, 512, 502):
                         ok += len(batch)
                     else:
                         print(f"    批次 {i // batch_size + 1} 失败: "
