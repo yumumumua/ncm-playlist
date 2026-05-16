@@ -4,15 +4,10 @@
 
 ## 架构
 
-本项目采用多技能架构，每个网易云音乐功能模块作为独立 skill 实现。
-
 ```
 ncm-playlist/
 ├── skills/           # 技能目录
-│   └── playlist/     # 歌单管理（当前）
-│   ├── radio/        # 电台管理（规划中）
-│   └── comment/      # 云村评论（规划中）
-├── docs/             # 项目文档
+│   └── playlist/     # 歌单管理
 └── README.md         # 本文件
 ```
 
