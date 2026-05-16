@@ -8,6 +8,7 @@ import urllib.request
 import urllib.parse
 import ssl
 from concurrent.futures import ThreadPoolExecutor
+from typing import Optional, List, Tuple, Dict
 
 
 class NeteaseMusicAPI:
@@ -15,7 +16,7 @@ class NeteaseMusicAPI:
 
     BASE_URL = "https://music.163.com"
 
-    def __init__(self, cookie: str, progress_file: str | None = None):
+    def __init__(self, cookie: str, progress_file: Optional[str] = None):
         self.cookie = cookie
         self.progress_file = progress_file
         self._progress_lock = threading.Lock()
@@ -37,7 +38,7 @@ class NeteaseMusicAPI:
 
     # ── HTTP helpers ──────────────────────────────────────────
 
-    def get(self, path: str, params: dict | None = None) -> dict:
+    def get(self, path: str, params: Optional[Dict] = None) -> Dict:
         url = f"{self.BASE_URL}{path}"
         if params:
             url += "?" + urllib.parse.urlencode(params)
@@ -45,7 +46,7 @@ class NeteaseMusicAPI:
         with urllib.request.urlopen(req, context=self._ssl_ctx, timeout=30) as resp:
             return json.loads(resp.read().decode())
 
-    def post(self, path: str, data: dict) -> dict:
+    def post(self, path: str, data: Dict) -> Dict:
         body = urllib.parse.urlencode(data).encode()
         req = urllib.request.Request(
             f"{self.BASE_URL}{path}", data=body, headers=self.headers
@@ -53,7 +54,7 @@ class NeteaseMusicAPI:
         with urllib.request.urlopen(req, context=self._ssl_ctx, timeout=30) as resp:
             return json.loads(resp.read().decode())
 
-    def post_json(self, path: str, data: dict) -> dict:
+    def post_json(self, path: str, data: Dict) -> Dict:
         body = json.dumps(data).encode()
         hdrs = dict(self.headers)
         hdrs["Content-Type"] = "application/json"
@@ -84,7 +85,7 @@ class NeteaseMusicAPI:
 
     # ── 歌单接口 ──────────────────────────────────────────────
 
-    def fetch_playlist_tracks(self, playlist_id: int) -> tuple[list, list]:
+    def fetch_playlist_tracks(self, playlist_id: int) -> Tuple[List, List]:
         """获取歌单全部歌曲，返回 (tracks, privileges)。
 
         第一步：/api/v6/playlist/detail (n=0) 获取完整 trackIds 列表。
@@ -113,7 +114,7 @@ class NeteaseMusicAPI:
         self._write_progress("fetching", 0, total)
 
         # 分批获取歌曲详情
-        remaining: dict[int, tuple[list, list]] = {}
+        remaining: Dict[int, Tuple[List, List]] = {}
         lock = threading.Lock()
 
         def fetch_detail_batch(batch_idx: int):
@@ -148,7 +149,7 @@ class NeteaseMusicAPI:
 
     # ── 歌单操作 ──────────────────────────────────────────────
 
-    def create_playlist(self, name: str, privacy: int = 10) -> int | None:
+    def create_playlist(self, name: str, privacy: int = 10) -> Optional[int]:
         """创建歌单，返回歌单 ID 或 None。privacy: 10=隐私, 0=公开。"""
         result = self.post("/api/user/playlist/create", {
             "name": name,
@@ -165,7 +166,7 @@ class NeteaseMusicAPI:
         })
         return result.get("code") == 200
 
-    def _manipulate_tracks(self, op: str, playlist_id: int, track_ids: list[int]) -> tuple[int, int]:
+    def _manipulate_tracks(self, op: str, playlist_id: int, track_ids: List[int]) -> Tuple[int, int]:
         """歌单歌曲增删通用方法。返回 (成功数, 失败数)。"""
         batch_size = 50
         ok = 0
@@ -213,10 +214,10 @@ class NeteaseMusicAPI:
         self._clear_progress()
         return ok, fail
 
-    def add_tracks(self, playlist_id: int, track_ids: list[int]) -> tuple[int, int]:
+    def add_tracks(self, playlist_id: int, track_ids: List[int]) -> Tuple[int, int]:
         """向歌单添加歌曲。返回 (成功数, 失败数)。"""
         return self._manipulate_tracks("add", playlist_id, track_ids)
 
-    def remove_tracks(self, playlist_id: int, track_ids: list[int]) -> tuple[int, int]:
+    def remove_tracks(self, playlist_id: int, track_ids: List[int]) -> Tuple[int, int]:
         """从歌单移除歌曲。返回 (成功数, 失败数)。"""
         return self._manipulate_tracks("del", playlist_id, track_ids)

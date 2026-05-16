@@ -4,4 +4,6 @@ output/
 .DS_Store
 *.swp
 .env
-docs/
+# AI 生成的辅助文件
+docs/specs/
+CLAUDE.md
