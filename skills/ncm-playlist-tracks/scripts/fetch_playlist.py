@@ -2,8 +2,8 @@
 """获取歌单歌曲列表。
 
 用法：
-  cd <项目根目录> && python3 skills/playlist/scripts/fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID"
-  cd <项目根目录> && python3 skills/playlist/scripts/fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID" --output ./result
+  cd <项目根目录> && python3 skills/ncm-playlist-tracks/scripts/fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID"
+  cd <项目根目录> && python3 skills/ncm-playlist-tracks/scripts/fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID" --output ./result
 """
 
 import argparse

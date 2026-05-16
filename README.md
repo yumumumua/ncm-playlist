@@ -7,17 +7,17 @@
 ```
 ncm-playlist/
 ├── skills/           # 技能目录
-│   └── playlist/     # 歌单管理
+│   └── ncm-playlist-tracks/  # 歌单歌曲管理
 └── README.md         # 本文件
 ```
 
 ## 当前技能
 
-### playlist — 歌单歌曲管理
+### ncm-playlist-tracks — 歌单歌曲管理
 
 获取歌单歌曲列表、添加/移除歌单内歌曲。
 
-详见 [skills/playlist/SKILL.md](skills/playlist/SKILL.md) 或 [skills/playlist/README.md](skills/playlist/README.md)
+详见 [skills/ncm-playlist-tracks/SKILL.md](skills/ncm-playlist-tracks/SKILL.md) 或 [skills/ncm-playlist-tracks/README.md](skills/ncm-playlist-tracks/README.md)
 
 ## 前置条件
 
@@ -87,18 +87,18 @@ openclaw skills install ncm-playlist
 cd ncm-playlist
 
 # 获取歌单歌曲列表
-python3 skills/playlist/scripts/fetch_playlist.py \
+python3 skills/ncm-playlist-tracks/scripts/fetch_playlist.py \
   --cookie "YOUR_COOKIE" \
   --playlist "歌单链接或ID"
 
 # 添加歌曲
-python3 skills/playlist/scripts/manage_playlist.py \
+python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py \
   --cookie "YOUR_COOKIE" \
   --playlist 歌单ID \
   --add 111,222,333
 ```
 
-更多用法详见 [skills/playlist/SKILL.md](skills/playlist/SKILL.md)。
+更多用法详见 [skills/ncm-playlist-tracks/SKILL.md](skills/ncm-playlist-tracks/SKILL.md)。
 
 ## License
 

@@ -14,12 +14,12 @@
 
 ```bash
 # 获取歌单歌曲
-python3 skills/playlist/scripts/fetch_playlist.py \
+python3 skills/ncm-playlist-tracks/scripts/fetch_playlist.py \
   --cookie "COOKIE" \
   --playlist "歌单ID或链接"
 
 # 添加歌曲
-python3 skills/playlist/scripts/manage_playlist.py \
+python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py \
   --cookie "COOKIE" \
   --playlist 歌单ID \
   --add 111,222,333
@@ -28,7 +28,7 @@ python3 skills/playlist/scripts/manage_playlist.py \
 ## 文件结构
 
 ```
-skills/playlist/
+skills/ncm-playlist-tracks/
 ├── SKILL.md              # Agent Skill 契约
 ├── README.md             # 本文件
 ├── scripts/              # 命令行脚本

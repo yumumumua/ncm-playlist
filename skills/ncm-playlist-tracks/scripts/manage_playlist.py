@@ -3,10 +3,10 @@
 
 用法：
   # 向歌单添加歌曲
-  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --playlist 123456 --add 111,222,333
+  cd <项目根目录> && python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py --cookie "COOKIE" --playlist 123456 --add 111,222,333
 
   # 从歌单移除歌曲
-  cd <项目根目录> && python3 skills/playlist/scripts/manage_playlist.py --cookie "COOKIE" --playlist 123456 --remove-tracks 111,222,333
+  cd <项目根目录> && python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py --cookie "COOKIE" --playlist 123456 --remove-tracks 111,222,333
 """
 
 import argparse

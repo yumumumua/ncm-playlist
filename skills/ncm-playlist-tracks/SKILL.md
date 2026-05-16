@@ -1,5 +1,5 @@
 ---
-name: ncm-playlist
+name: ncm-playlist-tracks
 description: 网易云音乐歌单管理工具。获取歌单歌曲列表，添加/移除歌单内歌曲。
 trigger:
   - 网易云音乐歌单整理、歌单管理
@@ -24,11 +24,11 @@ requires: Python 3.10+
 
 ## 脚本位置
 
-入口脚本在 `skills/playlist/scripts/`，核心模块在 `skills/playlist/netease_music/` 包内。运行时先 cd 到项目根目录：
+入口脚本在 `skills/ncm-playlist-tracks/scripts/`，核心模块在 `skills/ncm-playlist-tracks/netease_music/` 包内。运行时先 cd 到项目根目录：
 
 ```bash
-cd <项目目录> && python3 skills/playlist/scripts/fetch_playlist.py <参数>
-cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py <参数>
+cd <项目目录> && python3 skills/ncm-playlist-tracks/scripts/fetch_playlist.py <参数>
+cd <项目目录> && python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py <参数>
 ```
 
 ## 能力列表
@@ -50,7 +50,7 @@ cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py <参数>
 
 **调用方式：**
 ```bash
-cd <项目目录> && python3 skills/playlist/scripts/fetch_playlist.py \
+cd <项目目录> && python3 skills/ncm-playlist-tracks/scripts/fetch_playlist.py \
   --cookie "COOKIE" \
   --playlist "<playlist_id_or_url>"
 ```
@@ -69,7 +69,7 @@ cd <项目目录> && python3 skills/playlist/scripts/fetch_playlist.py \
 
 **调用方式：**
 ```bash
-cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
+cd <项目目录> && python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py \
   --cookie "COOKIE" \
   --playlist <playlist_id> \
   --add <id1,id2,id3>
@@ -86,7 +86,7 @@ cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
 
 **调用方式：**
 ```bash
-cd <项目目录> && python3 skills/playlist/scripts/manage_playlist.py \
+cd <项目目录> && python3 skills/ncm-playlist-tracks/scripts/manage_playlist.py \
   --cookie "COOKIE" \
   --playlist <playlist_id> \
   --remove-tracks <id1,id2,id3>
