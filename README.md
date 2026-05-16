@@ -1,23 +1,35 @@
 # ncm-playlist
 
-网易云音乐歌单管理 Agent Skill。纯 Python 标准库，零第三方依赖，直连 music.163.com 网页端 API。
+网易云音乐管理 Agent Skill 集合。纯 Python 标准库，零第三方依赖，直连 music.163.com 网页端 API。
 
-## 功能
+## 架构
 
-| 功能 | 说明 |
-|------|------|
-| 获取歌单歌曲列表 | 输入歌单 ID 或链接，获取完整歌曲列表（含 privilege 字段） |
-| 新建歌单 | 创建公开或隐私歌单 |
-| 删除歌单 | 删除指定歌单 |
-| 添加歌曲 | 向歌单批量添加歌曲（自动分批，每批 50 首） |
-| 移除歌曲 | 从歌单批量移除歌曲（自动分批，每批 50 首） |
+本项目采用多技能架构，每个网易云音乐功能模块作为独立 skill 实现。
+
+```
+ncm-playlist/
+├── skills/           # 技能目录
+│   └── playlist/     # 歌单管理（当前）
+│   ├── radio/        # 电台管理（规划中）
+│   └── comment/      # 云村评论（规划中）
+├── docs/             # 项目文档
+└── README.md         # 本文件
+```
+
+## 当前技能
+
+### playlist — 歌单管理
+
+获取歌单歌曲列表、创建/删除歌单、添加/移除歌曲。
+
+详见 [skills/playlist/SKILL.md](skills/playlist/SKILL.md) 或 [skills/playlist/README.md](skills/playlist/README.md)
 
 ## 前置条件
 
 - Python >= 3.10
 - 有效的网易云音乐 Cookie
 
-## 获取 Cookie
+### 获取 Cookie
 
 1. 浏览器打开 [music.163.com](https://music.163.com) 并登录
 2. F12 → Network → 刷新页面
@@ -64,7 +76,7 @@ cp -r ncm-playlist/ ~/.openclaw/workspace/skills/
 openclaw skills install ncm-playlist
 ```
 
-## 使用方式
+## 快速开始
 
 ### 作为 Agent Skill 使用
 
@@ -78,88 +90,25 @@ openclaw skills install ncm-playlist
 
 ```bash
 cd ncm-playlist
-```
 
-#### 1. 获取歌单歌曲列表
-
-```bash
-python3 fetch_playlist.py \
+# 获取歌单歌曲列表
+python3 skills/playlist/scripts/fetch_playlist.py \
   --cookie "YOUR_COOKIE" \
   --playlist "歌单链接或ID"
+
+# 创建歌单
+python3 skills/playlist/scripts/manage_playlist.py \
+  --cookie "YOUR_COOKIE" \
+  --create "我的歌单"
+
+# 添加歌曲
+python3 skills/playlist/scripts/manage_playlist.py \
+  --cookie "YOUR_COOKIE" \
+  --playlist 歌单ID \
+  --add 111,222,333
 ```
 
-输出到 `output/songs.json`，每首歌包含 id、name、artists、album、duration_ms、publish_time 和 privilege 字段。
-
-可选参数：
-- `--output DIR` — 指定输出目录
-
-#### 2. 创建歌单
-
-```bash
-# 创建隐私歌单（默认）
-python3 manage_playlist.py --cookie "YOUR_COOKIE" --create "我的歌单"
-
-# 创建公开歌单
-python3 manage_playlist.py --cookie "YOUR_COOKIE" --create "我的歌单" --public
-```
-
-#### 3. 删除歌单
-
-```bash
-python3 manage_playlist.py --cookie "YOUR_COOKIE" --delete 歌单ID
-```
-
-#### 4. 向歌单添加歌曲
-
-```bash
-python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --add 111,222,333
-```
-
-#### 5. 从歌单移除歌曲
-
-```bash
-python3 manage_playlist.py --cookie "YOUR_COOKIE" --playlist 歌单ID --remove-tracks 111,222,333
-```
-
-## privilege 字段说明
-
-返回的歌曲列表中包含 privilege 字段，可用于判断歌曲是否可播放：
-
-| 字段 | 含义 |
-|------|------|
-| `pl` | 播放等级，`> 0` 可播放，`== 0` 不可播放 |
-| `cp` | 版权状态，`1` 有版权，`0` 无版权 |
-| `st` | 状态，`0` 正常，负值异常（如 `-200` 有替代版本） |
-
-## Agent 进度追踪
-
-拉取大歌单时，脚本会在输出目录写入 `.progress.json` 文件：
-
-```json
-{"stage": "fetching", "current": 1500, "total": 5000}
-```
-
-建议用后台模式运行脚本，然后轮询 `.progress.json` 查看进度。脚本正常完成后会删除此文件。
-
-## 文件结构
-
-```
-ncm-playlist/
-├── SKILL.md                     # Agent Skill 元数据与指令
-├── README.md                    # 本文件
-├── fetch_playlist.py            # 获取歌单歌曲列表入口
-├── manage_playlist.py           # 歌单管理入口（创建/删除/添加/移除）
-└── netease_music/               # 核心模块包
-    ├── __init__.py              # 包初始化
-    └── api.py                   # API 客户端（直连 music.163.com）
-```
-
-## 注意事项
-
-- Cookie 含敏感信息，通过命令行参数传入，不要硬编码
-- 批量操作自动分批（每批 50 首），内置频率限制等待（0.3s/批）
-- 歌单增删操作不可逆，操作前确认意图
-- 网页端 API 非官方接口，网易云音乐可能随时变更
+更多用法详见 [skills/playlist/SKILL.md](skills/playlist/SKILL.md)。
 
 ## License
 
