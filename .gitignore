@@ -6,4 +6,5 @@ output/
 .env
 # AI 生成的辅助文件
 docs/specs/
+docs/superpowers/
 CLAUDE.md
