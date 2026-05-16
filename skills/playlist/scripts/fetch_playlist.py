@@ -2,15 +2,21 @@
 """获取歌单歌曲列表。
 
 用法：
-  python fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID"
-  python fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID" --output ./result
+  cd <项目根目录> && python3 skills/playlist/scripts/fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID"
+  cd <项目根目录> && python3 skills/playlist/scripts/fetch_playlist.py --cookie "COOKIE" --playlist "URL或ID" --output ./result
 """
 
 import argparse
 import json
 import os
 import sys
+from pathlib import Path
 from urllib.parse import urlparse, parse_qs
+
+# Add parent directories to path for imports
+script_dir = Path(__file__).parent
+skill_root = script_dir.parent
+sys.path.insert(0, str(skill_root))
 
 from netease_music.api import NeteaseMusicAPI
 
