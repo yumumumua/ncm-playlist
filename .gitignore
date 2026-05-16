@@ -8,3 +8,4 @@ output/
 docs/specs/
 docs/superpowers/
 CLAUDE.md
+.venv/
