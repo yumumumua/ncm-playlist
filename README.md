@@ -13,9 +13,9 @@ ncm-playlist/
 
 ## 当前技能
 
-### playlist — 歌单管理
+### playlist — 歌单歌曲管理
 
-获取歌单歌曲列表、创建/删除歌单、添加/移除歌曲。
+获取歌单歌曲列表、添加/移除歌单内歌曲。
 
 详见 [skills/playlist/SKILL.md](skills/playlist/SKILL.md) 或 [skills/playlist/README.md](skills/playlist/README.md)
 
@@ -78,8 +78,8 @@ openclaw skills install ncm-playlist
 安装后，当你在聊天中提到歌单管理相关需求时，agent 会自动激活此 skill。例如：
 
 - "帮我获取这个歌单的所有歌曲"
-- "新建一个叫 XXX 的歌单"
 - "往歌单里加这几首歌"
+- "从歌单里移除这些歌曲"
 
 ### 直接运行脚本
 
@@ -90,11 +90,6 @@ cd ncm-playlist
 python3 skills/playlist/scripts/fetch_playlist.py \
   --cookie "YOUR_COOKIE" \
   --playlist "歌单链接或ID"
-
-# 创建歌单
-python3 skills/playlist/scripts/manage_playlist.py \
-  --cookie "YOUR_COOKIE" \
-  --create "我的歌单"
 
 # 添加歌曲
 python3 skills/playlist/scripts/manage_playlist.py \
