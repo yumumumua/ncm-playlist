@@ -6,9 +6,10 @@
 
 ```
 ncm-playlist/
-├── skills/           # 技能目录
-│   └── ncm-playlist-tracks/  # 歌单歌曲管理
-└── README.md         # 本文件
+├── skills/                    # 技能目录
+│   ├── ncm-playlist-tracks/   # 歌单歌曲管理
+│   └── ncm-playlist-classify/ # 歌曲分类
+└── README.md                  # 本文件
 ```
 
 ## 当前技能
@@ -18,6 +19,12 @@ ncm-playlist/
 获取歌单歌曲列表、添加/移除歌单内歌曲。
 
 详见 [skills/ncm-playlist-tracks/SKILL.md](skills/ncm-playlist-tracks/SKILL.md) 或 [skills/ncm-playlist-tracks/README.md](skills/ncm-playlist-tracks/README.md)
+
+### ncm-playlist-classify — 歌曲分类
+
+根据用户定义的标准（语言、风格、年代等）将歌曲分类到不同歌单。
+
+详见 [skills/ncm-playlist-classify/SKILL.md](skills/ncm-playlist-classify/SKILL.md)
 
 ## 前置条件
 
@@ -80,6 +87,7 @@ openclaw skills install ncm-playlist
 - "帮我获取这个歌单的所有歌曲"
 - "往歌单里加这几首歌"
 - "从歌单里移除这些歌曲"
+- "帮我把歌单里的歌按语言分类到不同歌单"
 
 ### 直接运行脚本
 
